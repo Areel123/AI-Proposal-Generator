@@ -1,0 +1,66 @@
+{% extends 'proposals/base.html' %}
+
+{% block title %}Generate Proposal - AI Proposal Generator{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1 style="margin-bottom: 0.5rem; color: #2c3e50;">Generate Your Proposal</h1>
+    <p style="color: #6c757d; margin-bottom: 2rem;">Fill in the project details and let AI create a professional proposal for you</p>
+
+    <form method="post" action="{% url 'generate_proposal' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="project_title">Project Title *</label>
+            <input type="text" id="project_title" name="project_title" required
+                   placeholder="e.g., E-commerce Website Development">
+        </div>
+
+        <div class="form-group">
+            <label for="project_description">Project Description *</label>
+            <textarea id="project_description" name="project_description" required
+                      placeholder="Describe the project scope, goals, and objectives..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="requirements">Requirements *</label>
+            <textarea id="requirements" name="requirements" required
+                      placeholder="List the technical requirements, features, and deliverables..."></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="budget">Budget (Optional)</label>
+                <input type="text" id="budget" name="budget"
+                       placeholder="e.g., $5,000 - $10,000">
+            </div>
+
+            <div class="form-group">
+                <label for="timeline">Timeline (Optional)</label>
+                <input type="text" id="timeline" name="timeline"
+                       placeholder="e.g., 4-6 weeks">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="client_name">Client Name (Optional)</label>
+            <input type="text" id="client_name" name="client_name"
+                   placeholder="e.g., Acme Corporation">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+            ✨ Generate Proposal with AI
+        </button>
+    </form>
+</div>
+
+<div class="card" style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border: 2px solid #667eea30;">
+    <h3 style="margin-bottom: 1rem;">💡 How It Works</h3>
+    <ol style="padding-left: 1.5rem; color: #495057;">
+        <li style="margin-bottom: 0.5rem;"><strong>Enter Details:</strong> Provide information about your project</li>
+        <li style="margin-bottom: 0.5rem;"><strong>AI Analysis:</strong> Our system searches similar past proposals using semantic search</li>
+        <li style="margin-bottom: 0.5rem;"><strong>Smart Generation:</strong> Groq LLM creates a tailored proposal based on context</li>
+        <li style="margin-bottom: 0.5rem;"><strong>Save & Reuse:</strong> Your proposals are stored for future reference and improvement</li>
+    </ol>
+</div>
+{% endblock %}

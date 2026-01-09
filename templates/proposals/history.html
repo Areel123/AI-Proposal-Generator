@@ -1,0 +1,49 @@
+{% extends 'proposals/base.html' %}
+
+{% block title %}Proposal History{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1 style="margin-bottom: 2rem; color: #2c3e50;">📚 Proposal History</h1>
+
+    {% if proposals %}
+        <div style="display: grid; gap: 1.5rem;">
+            {% for proposal in proposals %}
+            <div style="background: #f8f9fa; border-radius: 8px; padding: 1.5rem; border-left: 4px solid #667eea;">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div style="flex: 1;">
+                        <h3 style="color: #2c3e50; margin-bottom: 0.5rem;">{{ proposal.project_title }}</h3>
+                        <p style="color: #6c757d; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                            {{ proposal.project_description|truncatewords:30 }}
+                        </p>
+                        <div style="display: flex; gap: 1.5rem; font-size: 0.85rem; color: #6c757d;">
+                            <span>📅 {{ proposal.created_at|date:"M d, Y" }}</span>
+                            {% if proposal.budget %}
+                            <span>💰 {{ proposal.budget }}</span>
+                            {% endif %}
+                            {% if proposal.timeline %}
+                            <span>⏱️ {{ proposal.timeline }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: stretch;">
+                        <a href="{% url 'view_proposal' proposal.id %}" class="btn btn-primary" style="padding: 0.5rem 1rem; min-width: 80px; text-align: center;">View</a>
+                        <form method="post" action="{% url 'delete_proposal' proposal.id %}" style="display: inline; margin: 0;"
+                              onsubmit="return confirm('Are you sure you want to delete this proposal?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger" style="padding: 0.5rem 1rem; min-width: 80px;">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 3rem; color: #6c757d;">
+            <p style="font-size: 1.2rem; margin-bottom: 1rem;">No proposals yet</p>
+            <p>Start by creating your first proposal!</p>
+            <a href="{% url 'home' %}" class="btn btn-primary" style="margin-top: 1rem;">Create Proposal</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

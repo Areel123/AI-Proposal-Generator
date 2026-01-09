@@ -1,0 +1,169 @@
+{% extends 'proposals/base.html' %}
+
+{% block title %}{{ proposal.project_title }} - Proposal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 style="color: #2c3e50; margin-bottom: 0.5rem;">{{ proposal.project_title }}</h1>
+            <p style="color: #6c757d;">Generated on {{ proposal.created_at|date:"F d, Y" }}</p>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <button onclick="copyProposal()" class="btn btn-secondary" id="copyBtn">📋 Copy</button>
+            <a href="{% url 'proposal_history' %}" class="btn btn-secondary">← Back</a>
+        </div>
+    </div>
+
+    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+        <h3 style="margin-bottom: 1rem; color: #495057;">Project Details</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div>
+                <strong>Client:</strong> {{ proposal.client_name|default:"Not specified" }}
+            </div>
+            <div>
+                <strong>Budget:</strong> {{ proposal.budget|default:"To be discussed" }}
+            </div>
+            <div>
+                <strong>Timeline:</strong> {{ proposal.timeline|default:"Flexible" }}
+            </div>
+        </div>
+    </div>
+
+    <div style="background: white; border: 2px solid #e1e8ed; border-radius: 8px; padding: 2rem;">
+        <h2 style="color: #667eea; margin-bottom: 1.5rem;">Generated Proposal</h2>
+        <div id="proposalContent" class="proposal-content"></div>
+        <div id="rawContent" style="display: none;">{{ proposal.generated_proposal }}</div>
+    </div>
+</div>
+
+<script>
+function copyProposal() {
+    const content = document.getElementById('rawContent').textContent;
+    navigator.clipboard.writeText(content).then(() => {
+        const btn = document.getElementById('copyBtn');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '✓ Copied!';
+        btn.style.background = '#28a745';
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.style.background = '';
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+        alert('Failed to copy. Please try again.');
+    });
+}
+
+// Simple but effective Markdown parser
+function parseMarkdown(text) {
+    // Convert **bold** to <strong>
+    text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+    // Convert *italic* to <em>
+    text = text.replace(/\*([^*]+?)\*/g, '<em>$1</em>');
+
+    // Convert bullet points to list items
+    let lines = text.split('\n');
+    let html = '';
+    let inList = false;
+
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i].trim();
+
+        // Check for bullet points
+        if (line.match(/^[\*\-\+]\s+/)) {
+            if (!inList) {
+                html += '<ul>';
+                inList = true;
+            }
+            html += '<li>' + line.replace(/^[\*\-\+]\s+/, '') + '</li>';
+        }
+        // Check for numbered lists
+        else if (line.match(/^\d+\.\s+/)) {
+            if (!inList) {
+                html += '<ol>';
+                inList = true;
+            }
+            html += '<li>' + line.replace(/^\d+\.\s+/, '') + '</li>';
+        }
+        // Regular paragraph
+        else {
+            if (inList) {
+                html += '</ul>';
+                inList = false;
+            }
+
+            if (line.length > 0) {
+                html += '<p>' + line + '</p>';
+            } else {
+                html += '<br>';
+            }
+        }
+    }
+
+    // Close any open list
+    if (inList) {
+        html += '</ul>';
+    }
+
+    return html;
+}
+
+// Render the markdown content when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    const rawContent = document.getElementById('rawContent').textContent;
+    const parsedContent = parseMarkdown(rawContent);
+    document.getElementById('proposalContent').innerHTML = parsedContent;
+});
+</script>
+
+<style>
+.proposal-content {
+    line-height: 1.8;
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+.proposal-content strong {
+    color: #1a202c;
+    font-weight: 700;
+    font-size: 1.1em;
+}
+
+.proposal-content p {
+    margin-bottom: 1rem;
+}
+
+.proposal-content br {
+    display: block;
+    content: "";
+    margin: 0.5rem 0;
+}
+
+.proposal-content ul,
+.proposal-content ol {
+    margin: 1rem 0 1.5rem 2rem;
+    padding-left: 0;
+}
+
+.proposal-content ul {
+    list-style-type: disc;
+}
+
+.proposal-content ol {
+    list-style-type: decimal;
+}
+
+.proposal-content li {
+    margin-bottom: 0.5rem;
+    line-height: 1.7;
+    padding-left: 0.5rem;
+}
+
+.proposal-content em {
+    font-style: italic;
+    color: #495057;
+}
+</style>
+{% endblock %}
