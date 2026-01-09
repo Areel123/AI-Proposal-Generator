@@ -116,14 +116,11 @@ Visit `http://127.0.0.1:8000` in your browser.
 
 ## 🎨 Screenshots
 
-### Home Page
-![Home Page](screenshots/home.png)
-
-### Generated Proposal
-![Proposal View](screenshots/proposal.png)
-
-### History
-![History](screenshots/history.png)
+### Project Image
+![Project 1](https://github.com/user-attachments/assets/37657016-9526-4266-9e56-d766a8806481)
+![Project 2](https://github.com/user-attachments/assets/ce79e4b7-2a81-47db-9e16-01f10b254561)
+![Project 3](https://github.com/user-attachments/assets/cedc2b45-145e-4c89-a3dc-b05ad4eca157)
+![Project 4](https://github.com/user-attachments/assets/6180bd2e-9d3a-4162-b6b1-0e0b6f68c307)
 
 ## 🧪 How It Works
 
@@ -184,22 +181,12 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 👨‍💻 Author
-
-**Your Name**
-- GitHub: [@Areel123](https://github.com/Areel123)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-
 ## 🙏 Acknowledgments
 
 - Groq for providing fast LLM inference
 - Sentence Transformers for embedding models
 - FAISS for efficient similarity search
 - Django community for the amazing framework
-
-## 📧 Contact
-
-For questions or feedback, please open an issue on GitHub.
 
 ---
 
